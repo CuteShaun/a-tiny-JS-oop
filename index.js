@@ -27,26 +27,26 @@ class MainForm {
     this.saying = saying;
     this.friendList = friendList;
   }
-
-  toString() {
-    return allProps
-      .map(item => {
-        if (Array.isArray(this[item])) {
-          return this[item].join(", ");
-        }
-        return `${this[item]}`;
-      })
-      .join("; ");
-  }
-
-  say() {
-    return this.saying;
-  }
-
-  friends() {
-    return `<em>${this.friendList}</em>`;
-  }
 }
+
+MainForm.prototype.toString = function() {
+  return allProps
+    .map(item => {
+      if (Array.isArray(this[item])) {
+        return this[item].join(", ");
+      }
+      return `${this[item]}`;
+    })
+    .join("; ");
+};
+
+MainForm.prototype.say = function() {
+  return this.saying;
+};
+
+MainForm.prototype.friends = function() {
+  return `<em>${this.friendList}</em>`;
+};
 
 class Cat extends MainForm {
   constructor(type, legs, hands, gender, name, friendList, saying = "meow") {
