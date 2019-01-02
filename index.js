@@ -7,25 +7,21 @@
 
 // ======== OBJECTS DEFINITIONS ========
 // Define your objects here
-const allProps = ["type", "limbs", "gender", "name", "saying", "friendList"];
-
 class MainForm {
-  constructor(type, limbs, gender, name, saying, friendList) {
-    this.type = type;
-    this.limbs = limbs;
+  constructor(gender, name, saying, friendList) {
+    this.friendList = friendList;
     this.gender = gender;
     this.name = name;
     this.saying = saying;
-    this.friendList = friendList;
   }
 
   toString() {
-    return allProps
+    var props = Object.keys(this).reverse();
+    return props
       .map(item => {
-        if (Array.isArray(this[item])) {
-          return this[item].join(", ");
-        }
-        return `${this[item]}`;
+        return Array.isArray(this[item])
+          ? `<strong>${item}:</strong> ${this[item].join(", ")}`
+          : `<strong>${item}:</strong> ${this[item]}`;
       })
       .join("; ");
   }
@@ -39,27 +35,51 @@ class MainForm {
   }
 }
 
-class Cat extends MainForm {
-  constructor(type, limbs, gender, name, friendList, saying = "meow") {
-    super(type, limbs, gender, name, saying, friendList);
+class Human extends MainForm {
+  constructor(gender, name, saying, friendList) {
+    super(gender, name, saying, friendList);
+    this.type = "human";
+    this.legs = 2;
+    this.hands = 2;
   }
 }
 
-const man = new MainForm("human", 4, "male", "Andrew", "Hello, Eva!", [
-  "Eva",
-  "Masya"
-]);
-const woman = new MainForm("human", 4, "female", "Eva", "Hello, Andrew!", [
-  "Andrew",
-  "Barkl"
-]);
-const dog = new MainForm("animal", 4, "male", "Barkl", "bark", [
-  "Eva",
-  "Andrew"
-]);
+class Dog extends MainForm {
+  constructor(gender, name, saying, friendList) {
+    super(gender, name, saying, friendList);
+    this.type = "dog";
+    this.legs = 2;
+    this.saying = "bark";
+  }
+}
 
-const cat = new Cat("animal", 4, "female", "Masya", ["Andrew"]);
-const catWoman = new Cat("human", 4, "female", "Eva", ["Andrew", "Barkl"]);
+class Cat extends MainForm {
+  constructor(gender, name, friendList, saying) {
+    super(gender, name, saying, friendList);
+    this.type = "cat";
+    this.legs = 2;
+    this.saying = "meow";
+  }
+}
+
+class CatMetamorphose extends Cat {
+  constructor(gender, name, friendList, humanInterface, saying) {
+    super(gender, name, friendList);
+    this.hands = humanInterface.hands;
+  }
+}
+
+const man = new Human("male", "Andrew", "Hello, Eva!", ["Eva", "Masya"]);
+const woman = new Human("female", "Eva", "Hello, Andrew!", ["Andrew", "Barkl"]);
+const dog = new Dog("male", "Barkl", "bark", ["Eva", "Andrew"]);
+
+const cat = new Cat("female", "Masya", ["Andrew"]);
+const catWoman = new CatMetamorphose(
+  "female",
+  "Eva",
+  ["Andrew", "Barkl"],
+  new Human()
+);
 const allInhabitans = [man, woman, dog, cat, catWoman];
 
 allInhabitans.forEach(item => print(item));
