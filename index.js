@@ -40,14 +40,15 @@ class MainForm {
 
 class Human extends MainForm {
   constructor(gender, name, saying, friendList) {
-    super(
-      gender,
-      name,
-      saying,
-      friendList,
-      2,
-      "human"
-    ).toString = toStringHelper();
+    super(gender, name, saying, friendList, 2, "human").toString = function() {
+      return ["hands", ...allProps]
+        .map(item => {
+          return Array.isArray(this[item])
+            ? `<strong>${item}:</strong> ${this[item].join(", ")}`
+            : `<strong>${item}:</strong> ${this[item]}`;
+        })
+        .join("; ");
+    };
     this.hands = 2;
   }
 }
@@ -66,26 +67,10 @@ class Cat extends MainForm {
 
 class CatMetamorphose extends Cat {
   constructor(gender, name, friendList, humanInterface) {
-    super(
-      gender,
-      name,
-      friendList,
-      humanInterface.hands
-    ).toString = toStringHelper();
+    super(gender, name, friendList, humanInterface.hands);
     this.hands = humanInterface.hands;
+    this.toString = humanInterface.toString;
   }
-}
-
-function toStringHelper() {
-  return function() {
-    return ["hands", ...allProps]
-      .map(item => {
-        return Array.isArray(this[item])
-          ? `<strong>${item}:</strong> ${this[item].join(", ")}`
-          : `<strong>${item}:</strong> ${this[item]}`;
-      })
-      .join("; ");
-  };
 }
 
 const man = new Human("male", "Andrew", "Hello, Eva!", ["Eva", "Masya"]);
